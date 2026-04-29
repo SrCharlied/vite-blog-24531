@@ -1,0 +1,126 @@
+.item-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Roboto', sans-serif;
+  color: #f0d9b5;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  min-height: 100vh;
+}
+
+.item-list-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-family: 'Cinzel', serif;
+  font-size: 2.5rem;
+  margin: 0;
+  text-shadow: 0 0 15px rgba(240, 217, 181, 0.5);
+  color: #f0d9b5;
+  letter-spacing: 2px;
+}
+
+.page-subtitle {
+  font-size: 1.2rem;
+  color: #e0e0e0;
+  margin-top: 0.5rem;
+}
+
+.search-container {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 2px solid #8a6d3b;
+  background: rgba(26, 26, 46, 0.7);
+  color: #f0d9b5;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(138, 109, 59, 0.7);
+}
+
+.tabs-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.tab {
+  padding: 0.8rem 1.5rem;
+  background: rgba(138, 109, 59, 0.3);
+  border: 1px solid #8a6d3b;
+  border-radius: 6px;
+  color: #f0d9b5;
+  font-family: 'Cinzel', serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab:hover {
+  background: rgba(138, 109, 59, 0.5);
+}
+
+.tab.active {
+  background: rgba(138, 109, 59, 0.7);
+  box-shadow: 0 0 15px rgba(138, 109, 59, 0.5);
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.item-link {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease;
+}
+
+.item-link:hover {
+  transform: translateY(-5px);
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  background: rgba(26, 26, 46, 0.7);
+  border-radius: 12px;
+  border: 1px solid #8a6d3b;
+}
+
+.no-results h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  margin: 0 0 1rem 0;
+  color: #f0d9b5;
+}
+
+.no-results p {
+  color: #e0e0e0;
+  margin: 0;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #f0d9b5;
+  background: rgba(26, 26, 46, 0.7);
+  border-radius: 12px;
+  margin: 2rem 0;
+}
