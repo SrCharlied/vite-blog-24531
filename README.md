@@ -1,11 +1,13 @@
 # Elden Ring Wiki
 
+Se apunta al nivel Senior con esta tarea
+
 Un blog interactivo del juego Elden Ring con información detallada sobre jefes, armas, armaduras, criaturas y ubicaciones.
 
 ## 🌟 Características Principales
 
 - Exploración de datos del juego Elden Ring a través de la API de fanapis.com
-- Navegación por diferentes categorías de contenido: Jefes Principales, Armas, Armaduras, Criaturas y Ubicaciones
+- Navegación por diferentes categorías de contenido: Jefes, Armas, Armaduras, etc.
 - Sistema de filtrado por categorías con pestañas
 - Página de detalle para cada elemento con información específica
 - Botón de "Elemento Aleatorio" para descubrir contenido de forma sorpresa
@@ -49,6 +51,13 @@ Un blog interactivo del juego Elden Ring con información detallada sobre jefes,
 3. Haz clic en cualquier elemento para ver sus detalles
 4. Usa el botón "Ver un elemento aleatorio" para descubrir contenido de forma sorpresa
 
+## 🧭 Rutas
+
+- `/` → Página principal
+- `/items` → Listado de elementos
+- `/items/:type/:id` → Detalle de elemento
+- `*` → Página 404
+
 ## 🧩 Componentes Reutilizables
 
 ### EldenRingCard
@@ -57,7 +66,6 @@ Componente para mostrar información de elementos individuales del juego con una
 
 **Props:**
 - `item` (object): Objeto con la información del elemento a mostrar
-- `type` (string): Tipo de elemento (boss, weapon, armor, creature, location)
 
 ### ItemDetail
 
@@ -72,9 +80,7 @@ Componente que muestra los detalles de un elemento específico del juego.
 Componente que muestra una lista de elementos con pestañas para filtrar por categorías.
 
 **Props:**
-- `data` (array): Array de elementos a mostrar
-- `loading` (boolean): Estado de carga
-- `error` (string): Mensaje de error si existe
+- Ninguna (usa hooks para obtener datos)
 
 ### Home
 
@@ -90,9 +96,23 @@ src/
 ├── components/          # Componentes reutilizables
 ├── pages/              # Páginas principales de la aplicación
 ├── data/               # Datos y configuraciones
-├── hooks/              # Hooks personalizados de React
-├── services/            # Servicios para obtener datos de la API
+├── context/             # Contextos de React (como favoritos)
 └── utils/              # Funciones de utilidad
+```
+
+## 🧠 Arquitectura
+
+- Los datos se normalizan en una sola fuente (`allItems`)
+- Se usa `useMemo` para evitar recalculos innecesarios
+- Favoritos se manejan con IDs para evitar inconsistencias 
+
+## ❤️ Favoritos
+
+Se implementa un estado global usando Context API:
+
+- Guarda únicamente IDs
+- Permite agregar/quitar favoritos
+- Evita duplicación de datos 
 
 ## 🌐 API
 
@@ -106,9 +126,3 @@ Los datos se obtienen de la [Elden Ring API](https://eldenring.fanapis.com/) a t
 - CSS3
 - API de Elden Ring (fanapis.com)
 - Axios para peticiones HTTP
-
-## 📚 Fuentes y Recursos
-
-- [Elden Ring API Documentation](https://docs.fanapis.com/)
-- [React Documentation](https://react.dev/)
-- [Vite Documentation](https://vite.dev/)

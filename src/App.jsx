@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Home from './pages/Home';
 import ItemList from './pages/ItemList';
 import ItemDetail from './components/ItemDetail';
@@ -48,7 +49,7 @@ const NotFoundPage = () => {
         ¿Quizás deberías explorar otros caminos?
       </p>
       <div style={{ marginTop: '2rem' }}>
-        <a href="/" style={{ 
+        <Link to="/" style={{ 
           color: '#f0d9b5',
           textDecoration: 'none',
           fontSize: '1.1rem',
@@ -57,7 +58,7 @@ const NotFoundPage = () => {
           borderRadius: '4px'
         }}>
           Volver al inicio
-        </a>
+        </Link>
       </div>
     </div>
   );
