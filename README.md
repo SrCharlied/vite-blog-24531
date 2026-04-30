@@ -29,7 +29,7 @@ Un blog interactivo del juego Elden Ring con información detallada sobre jefes,
 
 2. Navega al directorio del proyecto:
    ```bash
-   cd elden-ring-wiki
+   cd vite-blog-24531
    ```
 
 3. Instala las dependencias:
