@@ -1,50 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useMemo } from 'react';
 import useEldenRingData from '../hooks/useEldenRingData';
 import EldenRingCard from '../components/EldenRingCard';
+import { useFavorites } from "../context/FavoritesContext";
 import './ItemList.css';
 
 const ItemList = () => {
   const { data, loading, error } = useEldenRingData();
   const [activeTab, setActiveTab] = useState('greatEnemies');
   const [searchTerm, setSearchTerm] = useState('');
-  const [items, setItems] = useState([]);
+  const { favorites } = useFavorites();
 
-  // Cargar items según la categoría seleccionada
-  useEffect(() => {
-    let filteredData = [];
-    
-    switch(activeTab) {
+  const allItems = useMemo(() => [
+    ...(data.greatEnemies || []).map(i => ({ ...i, type: 'greatEnemies' })),
+    ...(data.weapons || []).map(i => ({ ...i, type: 'weapons' })),
+    ...(data.armors || []).map(i => ({ ...i, type: 'armors' })),
+    ...(data.creatures || []).map(i => ({ ...i, type: 'creatures' })),
+    ...(data.locations || []).map(i => ({ ...i, type: 'locations' }))
+  ], [data]);
+
+  const items = useMemo(() => {
+    switch (activeTab) {
       case 'greatEnemies':
-        filteredData = data.greatEnemies || [];
-        break;
       case 'weapons':
-        filteredData = data.weapons || [];
-        break;
       case 'armors':
-        filteredData = data.armors || [];
-        break;
       case 'creatures':
-        filteredData = data.creatures || [];
-        case 'locations':
-        filteredData = data.locations || [];
-        break;
+      case 'locations':
+        return allItems.filter(item => item.type === activeTab);
+
+      case 'favorites':
+        return allItems.filter(item => favorites.includes(item.id));
+
       case 'all':
       default:
-        // Combinar todos los datos en un solo array
-        const allItems = [
-          ...data.greatEnemies.map(item => ({ ...item, type: 'greatEnemy' })),
-          ...data.weapons.map(item => ({ ...item, type: 'weapon' })),
-          ...data.armors.map(item => ({ ...item, type: 'armor' })),
-          ...data.creatures.map(item => ({ ...item, type: 'creature' })),
-          ...data.locations.map(item => ({ ...item, type: 'location' }))
-        ];
-        filteredData = allItems;
-        break;
+        return allItems;
     }
-    
-    setItems(filteredData);
-  }, [data, activeTab]);
+  }, [activeTab, allItems, favorites]);
+
+  const filteredItems = searchTerm
+    ? items.filter(item =>
+        (item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      )
+    : items;
 
   if (loading) {
     return <div className="loading">Cargando datos del juego...</div>;
@@ -53,14 +50,6 @@ const ItemList = () => {
   if (error) {
     return <div className="error">Error al cargar los datos: {error}</div>;
   }
-
-  // Filtrar por término de búsqueda si existe
-  const filteredItems = searchTerm 
-    ? items.filter(item => 
-        item.name && item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase()))
-      )
-    : items;
 
   return (
     <div className="item-list-container">
@@ -84,46 +73,59 @@ const ItemList = () => {
           className={`tab ${activeTab === 'greatEnemies' ? 'active' : ''}`}
           onClick={() => setActiveTab('greatEnemies')}
         >
-          Jefes Principales ({data.greatEnemies.length})
+          Jefes Principales ({data.greatEnemies?.length || 0})
         </button>
+
         <button 
           className={`tab ${activeTab === 'weapons' ? 'active' : ''}`}
           onClick={() => setActiveTab('weapons')}
         >
-          Armas ({data.weapons.length})
+          Armas ({data.weapons?.length || 0})
         </button>
+
         <button 
           className={`tab ${activeTab === 'armors' ? 'active' : ''}`}
           onClick={() => setActiveTab('armors')}
         >
-          Armaduras ({data.armors.length})
+          Armaduras ({data.armors?.length || 0})
         </button>
+
         <button 
           className={`tab ${activeTab === 'creatures' ? 'active' : ''}`}
           onClick={() => setActiveTab('creatures')}
         >
-          Criaturas ({data.creatures.length})
+          Criaturas ({data.creatures?.length || 0})
         </button>
+
         <button 
           className={`tab ${activeTab === 'locations' ? 'active' : ''}`}
           onClick={() => setActiveTab('locations')}
         >
-          Ubicaciones ({data.locations.length})
+          Ubicaciones ({data.locations?.length || 0})
         </button>
+
+        <button 
+          className={`tab ${activeTab === 'favorites' ? 'active' : ''}`}
+          onClick={() => setActiveTab('favorites')}
+        >
+          Favoritos ({favorites.length})
+        </button>
+
         <button 
           className={`tab ${activeTab === 'all' ? 'active' : ''}`}
           onClick={() => setActiveTab('all')}
         >
-          Todos ({items.length})
+          Todos ({allItems.length})
         </button>
       </div>
 
       <div className="items-grid">
         {filteredItems.length > 0 ? (
-          filteredItems.map((item, index) => (
-            <Link to={`/items/${item.type || activeTab}/${item.id}`} key={item.id} className="item-link">
-              <EldenRingCard item={item} />
-            </Link>
+          filteredItems.map(item => (
+            <EldenRingCard
+              key={`${item.type}-${item.id}`} 
+              item={item}
+            />
           ))
         ) : (
           <div className="no-results">

@@ -1,8 +1,48 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useEldenRingData from '../hooks/useEldenRingData';
 import './Home.css';
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { data, loading, error } = useEldenRingData();
+  const [items, setItems] = useState([]);
+  const [category] = useState('greatEnemies');
+
+  // Cargar items para seleccionar uno aleatorio
+  useEffect(() => {
+    if (loading || error) return;
+    
+    // Combinar todos los datos en un solo array para selección aleatoria
+    const allItems = [
+      ...data.greatEnemies.map(item => ({ ...item, type: 'greatEnemies' })),
+      ...data.weapons.map(item => ({ ...item, type: 'weapons' })),
+      ...data.armors.map(item => ({ ...item, type: 'armors' })),
+      ...data.creatures.map(item => ({ ...item, type: 'creatures' })),
+      ...data.locations.map(item => ({ ...item, type: 'locations' }))
+    ];
+    
+    setItems(allItems);
+  }, [data, loading, error]);
+
+  const handleRandom = () => {
+    if (!items || items.length === 0) return;
+
+    const randomIndex = Math.floor(Math.random() * items.length);
+    const randomItem = items[randomIndex];
+    const randomCategory = randomItem.type || category;
+
+    navigate(`/items/${randomCategory}/${randomItem.id}`);
+  };
+
+  if (loading) {
+    return <div className="loading">Cargando datos del juego...</div>;
+  }
+
+  if (error) {
+    return <div className="error">Error al cargar los datos: {error}</div>;
+  }
+
   return (
     <div className="home-container">
       <header className="hero-section">
@@ -17,35 +57,20 @@ const Home = () => {
         </div>
         
         <div className="navigation-links">
-          <Link to="/items" className="nav-link">
+          <div className="nav-link" onClick={() => navigate('/items')}>
             <div className="nav-card">
-              <h3>Explorar Jefes</h3>
-              <p>Conoce a los temibles gobernantes de las Tierras Intermedias</p>
+              <h3>Explorar las Tierras Intermedias</h3>
+              <p>Descubre el vasto mundo de posibilidades que ofrece el juego</p>
             </div>
-          </Link>
+          </div>
           
-          <Link to="/items" className="nav-link">
-            <div className="nav-card">
-              <h3>Armas y Armaduras</h3>
-              <p>Descubre el arsenal de armas y armaduras del juego</p>
-            </div>
-          </Link>
-          
-         <Link to="/items" className="nav-link">
-        <div className="nav-card">
-          <h3>Ubicaciones</h3>
-          <p>Explora los reinos y regiones de Elden Ring</p>
-        </div>
-      </Link>
-
+          <button onClick={handleRandom} className="random-item-button">
+            Ver un elemento aleatorio
+          </button>
         </div>
       </section>
-      
-      <footer className="footer">
-        <p>&copy; 2024 Elden Ring Wiki. Todos los derechos reservados.</p>
-      </footer>
     </div>
   );
-}
+};
 
 export default Home;
