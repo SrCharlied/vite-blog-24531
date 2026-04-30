@@ -35,6 +35,7 @@ Un blog interactivo del juego Elden Ring con información detallada sobre jefes,
 3. Instala las dependencias:
    ```bash
    npm install
+   npm install prop-types
    ```
 
 4. Inicia el servidor de desarrollo:
